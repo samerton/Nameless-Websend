@@ -34,8 +34,6 @@ class WSHook {
 
 				foreach($event as $command){
 					self::$_ws->doCommandAsConsole(str_replace('{USERNAME}', $params['username'], $command));
-					echo $command;
-					die();
 				}
 
 				self::$_ws->disconnect();
