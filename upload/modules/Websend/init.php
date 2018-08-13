@@ -35,7 +35,7 @@ if(!$module_installed){
 
 	try {
 		if(!$queries->tableExists('websend_commands')){
-			$queries->createTable('websend_commands', ' `id` int(11) NOT NULL AUTO_INCREMENT, `hook` varchar(64) NOT NULL, `command` text NOT NULL, `enabled` tinyint(1) NOT NULL DEFAULT \'0\', PRIMARY KEY (`id`)', "ENGINE=$engine DEFAULT CHARSET=$charset");
+			$queries->createTable('websend_commands', ' `id` int(11) NOT NULL AUTO_INCREMENT, `hook` varchar(64) NOT NULL, `commands` mediumtext NOT NULL, `enabled` tinyint(1) NOT NULL DEFAULT \'0\', PRIMARY KEY (`id`)', "ENGINE=$engine DEFAULT CHARSET=$charset");
 		}
 	} catch(Exception $e){
 		$ws_db_err = true;
