@@ -205,7 +205,18 @@ $admin_page = 'websend';
 								<input type="checkbox" name="enable_hook" id="inputEnable" class="js-switch" <?php if(!is_null($db_hook) && $db_hook->enabled == 1) echo 'checked '; ?>/>
 							</div>
 							<div class="form-group">
-								<div class="alert alert-info"><?php echo $websend_language->get('language', 'commands_information'); ?></div>
+								<div class="alert alert-info">
+									<?php
+									echo $websend_language->get('language', 'commands_information');
+									echo '<ul>';
+									if(count($hook['params'])){
+										foreach($hook['params'] as $param => $desc){
+											echo '<li><strong>{' . Output::getClean($param) . '}</strong> - ' . Output::getClean($desc) . '</li>';
+										}
+									}
+									echo '</ul>';
+									?>
+								</div>
 								<label for="inputCommands"><?php echo $websend_language->get('language', 'commands'); ?></label>
 								<textarea id="inputCommands" name="commands" class="form-control"><?php if(!is_null($db_hook)) echo Output::getClean($db_hook->commands); ?></textarea>
 							</div>

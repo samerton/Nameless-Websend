@@ -10,5 +10,5 @@
  */
 
 $module_author = 'Samerton';
-$module_version = '1.0.0';
+$module_version = '1.0.3';
 $nameless_version = '2.0.0-pr4';

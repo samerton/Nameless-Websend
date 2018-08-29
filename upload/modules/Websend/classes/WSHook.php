@@ -30,10 +30,22 @@ class WSHook {
 			$event = self::$_events[$params['event']];
 
 			if(count($event)){
+				$event_params = HookHandler::getHook($params['event']);
+				$event_params = $event_params['params'];
+
+				$event_param_keys = array();
+				$event_param_values = array();
+				if(count($event_params)){
+					foreach($event_params as $key => $event_param){
+						$event_param_keys[] = '{' . $key . '}';
+						$event_param_values[] = $params[$key];
+					}
+				}
+
 				self::$_ws->connect();
 
 				foreach($event as $command){
-					self::$_ws->doCommandAsConsole(str_replace('{USERNAME}', $params['username'], $command));
+					self::$_ws->doCommandAsConsole(str_ireplace($event_param_keys, $event_param_values, $command));
 				}
 
 				self::$_ws->disconnect();
