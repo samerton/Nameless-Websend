@@ -10,3 +10,4 @@ Send commands from your website to your Minecraft server using the Websend plugi
 ## Installation
 - Upload the contents of the **upload** directory straight into your NamelessMC installation's directory
 - Activate the module in the StaffCP -> Modules tab
+- You **must** have `WEBLISTENER_ACTIVE` set to `true` in your Websend plugin config file
