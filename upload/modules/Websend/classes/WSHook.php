@@ -2,7 +2,7 @@
 /*
  *	Made by Samerton
  *  https://github.com/samerton
- *  NamelessMC version 2.0.0-pr4
+ *  NamelessMC version 2.0.0-pr6
  *
  *  License: MIT
  *
@@ -23,8 +23,9 @@ class WSHook {
 	}
 
 	public static function execute($params = array()){
-		if(!isset($params['event']) || is_null(self::$_ws))
+		if(!isset($params['event']) || is_null(self::$_ws)){
 			return false;
+		}
 
 		if(array_key_exists($params['event'], self::$_events)){
 			$event = self::$_events[$params['event']];
@@ -42,10 +43,10 @@ class WSHook {
 					}
 				}
 
-				self::$_ws->connect();
-
-				foreach($event as $command){
-					self::$_ws->doCommandAsConsole(str_ireplace($event_param_keys, $event_param_values, $command));
+				if(self::$_ws->connect()){
+					foreach($event as $command){
+						self::$_ws->doCommandAsConsole(str_ireplace($event_param_keys, $event_param_values, $command));
+					}
 				}
 
 				self::$_ws->disconnect();
