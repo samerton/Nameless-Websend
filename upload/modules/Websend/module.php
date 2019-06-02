@@ -20,7 +20,7 @@ class Websend_Module extends Module {
 
 		$name = 'Websend';
 		$author = '<a href="https://samerton.me" target="_blank" rel="nofollow noopener">Samerton</a>';
-		$module_version = '1.1.0';
+		$module_version = '1.1.1';
 		$nameless_version = '2.0.0-pr6';
 
 		parent::__construct($this, $name, $author, $module_version, $nameless_version);
@@ -29,7 +29,18 @@ class Websend_Module extends Module {
 		$pages->add('Websend', '/panel/websend', 'pages/panel/websend.php');
 
 		// Hooks
-		$ws_hooks = $queries->getWhere('websend_commands', array('enabled', '=', 1));
+		$ws_hooks = array();
+		$this->_cache->setCache('websend_module');
+
+		if($this->_cache->isCached('installed')){
+			$ws_hooks = $queries->getWhere('websend_commands', array('enabled', '=', 1));
+		} else {
+			if($this->_queries->tableExists('websend_commands')){
+				$this->_cache->store('installed', true);
+				$ws_hooks = $queries->getWhere('websend_commands', array('enabled', '=', 1));
+			}
+		}
+
 		if(count($ws_hooks)){
 			if(!file_exists(ROOT_PATH . '/modules/Websend/config.php')){
 				return;
@@ -76,6 +87,9 @@ class Websend_Module extends Module {
 		try {
 			if(!$this->_queries->tableExists('websend_commands')){
 				$this->_queries->createTable('websend_commands', ' `id` int(11) NOT NULL AUTO_INCREMENT, `hook` varchar(64) NOT NULL, `commands` mediumtext NOT NULL, `enabled` tinyint(1) NOT NULL DEFAULT \'0\', PRIMARY KEY (`id`)', "ENGINE=$engine DEFAULT CHARSET=$charset");
+
+				$this->_cache->setCache('websend_module');
+				$this->_cache->store('installed', true);
 			}
 		} catch(Exception $e){
 			$ws_db_err = true;
@@ -108,8 +122,6 @@ class Websend_Module extends Module {
 	}
 
 	public function onPageLoad($user, $pages, $cache, $smarty, $navs, $widgets, $template){
-		$queries = new Queries();
-
 		// Permissions
 		PermissionHandler::registerPermissions('Websend', array(
 			'admincp.websend' => $this->_language->get('moderator', 'staff_cp') . ' &raquo; ' . $this->_websend_language->get('language', 'websend')
